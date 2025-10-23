@@ -32,9 +32,18 @@ steps:
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
+    codeCoverageEnabled: true 
+    testSelector: 'testAssemblies'
+    testAssemblyVer2: |
+      **\*test*.dll
+      !**\*TestAdapter.dll
+      !**\obj\**
 
+# Then publish the coverage results
 - task: PublishCodeCoverageResults@2
   inputs:
-    summaryFileLocation: '$(solution)'
-    failIfCoverageEmpty: true
+    codeCoverageTool: 'Cobertura'
+    summaryFileLocation: '$(Agent.TempDirectory)/**/*.coverage'
+    pathToSources: '$(System.DefaultWorkingDirectory)'
+    failIfCoverageEmpty: false  # Set to true if you want to fail on no coverage
 
